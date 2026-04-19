@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DMS | Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
+<body>
+    <nav class="sidebar">
+        <h2>DMS Admin</h2>
+        <a href="/dashboard" class="nav-item active"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="/monitoring" class="nav-item"><i class="fas fa-plus-circle"></i> New Assessment</a>
+        <a href="/records" class="nav-item"><i class="fas fa-folder-open"></i> View Records</a>
+        <a href="/logout" class="nav-item" style="margin-top: auto;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <h1 style="margin: 0;">System Overview</h1>
+            <p style="color: #888;">Welcome back, {{ username }}</p>
+        </header>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px;">
+            <div class="card">
+                <i class="fas fa-dog" style="font-size: 2em; color: var(--accent);"></i>
+                <h3>Total Records</h3>
+                <h2 style="font-size: 3em; margin: 0;">{{ total_records }}</h2>
+            </div>
+            <div class="card">
+                <i class="fas fa-heartbeat" style="font-size: 2em; color: #c62828;"></i>
+                <h3>Latest Status</h3>
+                <h2 style="margin-top: 5px;">
+                    <span class="status-badge {{ latest_stress.lower() if latest_stress else 'excellent' }}">
+                        {{ latest_stress }}
+                    </span>
+                </h2>
+            </div>
+        </div>
+
+        <section class="recent-records-section">
+            <div class="section-header">
+                <h3><i class="fas fa-history" style="color: var(--accent); margin-right: 8px;"></i> Recent Dog Assessments</h3>
+                <a href="/records" class="view-all-btn">View All Records <i class="fas fa-arrow-right"></i></a>
+            </div>
+
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th>Owner Name</th>
+                        <th>Dog Name</th>
+                        <th>Breed</th>
+                        <th>Score</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows[:5] %} 
+                    <tr>
+                        <td><strong>{{ row.owner_name }}</strong></td>
+                        <td><strong>{{ row.dog_name }}</strong></td>
+                        <td>{{ row.dog_breed }}</td>
+                        <td><i class="fas fa-star" style="color: #ffc107; font-size: 0.8em;"></i> {{ row.average_score }}</td>
+                        <td><span class="status-badge {{ row.stress_level.lower() }}">{{ row.stress_level }}</span></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #999; padding: 30px;">
+                            <i class="fas fa-inbox" style="font-size: 20px; display: block; margin-bottom: 10px;"></i>
+                            No records found. Start a new assessment!
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

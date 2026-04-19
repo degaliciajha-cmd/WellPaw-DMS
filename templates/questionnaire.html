@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DMS | Health Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <span>DMS Admin</span>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="{{ url_for('monitoring') }}" class="nav-item active"><i class="fas fa-desktop"></i> Monitoring</a>
+            <a href="{{ url_for('records') }}" class="nav-item"><i class="fas fa-dog"></i> Dog Records</a>
+            <a href="{{ url_for('settings') }}" class="nav-item"><i class="fas fa-cog"></i> Settings</a>
+        </div>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('logout') }}" class="nav-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-bar" style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Physical Assessment</h1>        
+            <div class="progress-container">
+                <div class="step-circle ">1</div>
+                <div class="step-circle ">2</div>
+                <div class="step-circle active">3</div>
+            </div>
+        </header>
+
+        <section class="card wide-card">
+            <div class="assessment-header">
+                <h3>Condition Rating Table</h3>
+                <p>Please evaluate the dog's physical state from 1 (Healthy) to 4 (Critical).</p>
+            </div>
+
+            <div class="analysis-box" style="background: #fdf5e6; border-left: 5px solid #361a07; padding: 20px; margin-bottom: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <h3 style="margin-top: 0; color: #361a07; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-robot"></i> AI Analysis Result:
+                </h3>
+                <p style="margin-bottom: 0; font-size: 1.1rem;">
+                    OpenCV detected a video score of: <strong style="color: #361a07;">{{ session.get('video_score', 'Pending') }}</strong>
+                </p>
+            </div>
+
+            <form method="POST">
+                <table class="assessment-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%;">Category</th>
+                            <th style="width: 60%;">Condition Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><i class="fas fa-weight-scale"></i> <label for="weight">Weight</label></td>
+                            <td>
+                                <div class="select-container">
+                                    <select name="weight" id="weight" required>
+                                        <option value="" disabled selected>Select Rating...</option> 
+                                        <option value="1">1 - Thin </option>
+                                        <option value="2">2 - Ideal </option>
+                                        <option value="3">3 - Overweight</option>
+                                        <option value="4">4 - Obese </option>
+                                    </select>
+                                    <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">Reference for weight: </p>
+                                    <img src="{{ url_for('static', filename='images/weight.webp') }}" alt="Weight Reference" class="weight-reference-image">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-hand-dots"></i> <label for="skin">Skin Condition</label></td>
+                            <td>
+                                <select name="skin" id="skin" required>
+                                    <option value="" disabled selected>Select Rating...</option>
+                                    <option value="1">1 - Healthy - no redness</option>
+                                    <option value="2">2 - Mild - Minor irritation or dryness</option>
+                                    <option value="3">3 - Moderate - Visible Rashes / Open sores</option>
+                                    <option value="4">4 - Severe Infection - Bleeding</option>
+                                </select>
+                                 <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">Reference for skin condition: </p>
+                                    <img src="{{ url_for('static', filename='images/Skin.png') }}" alt="Skin Condition Reference" class="Skin-reference-image">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-brush"></i> <label for="fur">Fur Condition</label></td>
+                            <td>
+                                <select name="fur" id="fur" required>
+                                    <option value="" disabled selected>Select Rating...</option>
+                                    <option value="1">1 - Low Density</option>
+                                    <option value="2">2 - Medium Density</option>
+                                    <option value="3">3 - High Density</option>
+                                </select>
+                                 <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">Reference for fur condition: </p>
+                                 <img src="{{ url_for('static', filename='images/Fur.png') }}" alt="Fur Condition Reference" class="fur-reference-image">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-bug"></i> <label for="parasites">Parasites</label></td>
+                            <td>
+                                <select name="parasites" id="parasites" required>
+                                    <option value="" disabled selected>Select Rating...</option>
+                                    <option value="1">1 - No signs of ticks or fleas</option>
+                                    <option value="2">2 - Mild presence detected</option>
+                                    <option value="3">3 - Moderate infestation</option>
+                                    <option value="4">4 - Severe / Visible flea anemia</option>
+                                </select>
+                                <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">Reference for parasites: </p>
+                                 <img src="{{ url_for('static', filename='images/Parasite.png') }}" alt="Parasites Reference" class="parasites-reference-image">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-dog"></i> <label for="behavior">Behavior</label></td>
+                            <td>
+                                <div class="select-container">
+                                    <select name="behavior" id="behavior" required>
+                                        <option value="" disabled selected>Select Rating...</option>
+                                        <option value="1">1 - Calm/Relaxed </option>
+                                        <option value="2">2 - Alert </option>
+                                        <option value="3">3 - Stressed </option>
+                                        <option value="4">4 - Very Stressed </option>
+                                    </select>
+                                    <p style="font-size: 0.8rem; color: #666; margin-top: 5px;">Reference for behavior/body language: </p>
+                                    <img src="{{ url_for('static', filename='images/Body Language.png') }}" alt="Behavior Reference" class="behavior-reference-image">
+                                </div>   
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="form-actions" style="margin-top: 25px; display: flex; gap: 15px; justify-content: flex-end; align-items: center;">
+                    <a href="{{ url_for('reset_assessment') }}" 
+                       onclick="return confirm('Discard current video and assessment data?')"
+                       style="color: #d9534f; text-decoration: none; font-size: 0.9rem; margin-right: auto; font-weight: 600;">
+                       <i class="fas fa-trash-alt"></i> Reset Assessment
+                    </a>
+
+                    <a href="{{ url_for('monitoring') }}" class="btn btn-secondary" style="background: #999; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px;">Back</a>
+                    <button type="submit" class="btn btn-save" style="background: #361a07; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">Save & Calculate Status</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

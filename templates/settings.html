@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DMS | System Settings & Information</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
+<body class="dashboard-body">
+
+    <nav class="sidebar">
+        <div class="sidebar-header"><div style="text-align: left; font-weight: bold; color: #beb0ac;">DMS Admin</div></div>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="{{ url_for('monitoring') }}" class="nav-item"><i class="fas fa-desktop"></i> Monitoring</a>
+            <a href="{{ url_for('records') }}" class="nav-item"><i class="fas fa-dog"></i> View Records</a>
+            <a href="{{ url_for('settings') }}" class="nav-item active"><i class="fas fa-cog"></i> Settings</a>
+            <a href="/logout" class="nav-item" style="margin-top: auto;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <h1>System Settings & Documentation</h1>
+        </header>
+
+        <div class="content-section" style="max-width: 900px;">
+            
+            <button class="collapsible-btn" onclick="toggleAccordion(this)">
+                <span><i class="fas fa-info-circle"></i> How the System Works</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="collapsible-content">
+                <div style="padding: 20px 0;">
+                   <p>The <strong>Dog Monitoring System (DMS)</strong> is an integrated health and behavioral assessment tool. It combines visual data analysis with physical health metrics to provide a comprehensive "Stress & Health Score" for dogs.</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div class="info-card"><strong>Step 1:</strong> Registration <p>Captures basic profile data (Name, Breed, Age). This establishes the baseline for the specific dog being monitored.</p></div>
+                        <div class="info-card"><strong>Step 2:</strong> Video Upload <p>The core AI/Monitoring component. Users upload video footage which is processed to observe movement patterns and behavioral cues.</p></div>
+                        <div class="info-card"><strong>Step 3:</strong> Vitals Check <p>A questionnaire-based evaluation of physical vital signs (skin health, fur condition, presence of parasites, overall body condition (weight) and body language ) to supplement the video data.</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="collapsible-btn" onclick="toggleAccordion(this)">
+                <span><i class="fas fa-calculator"></i> Understanding the Score</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="collapsible-content">
+                <div style="padding: 20px 0;">
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 10px;"><span class="status-badge excellent">1.0 - 1.5</span> Excellent Health</li>
+                        <li style="margin-bottom: 10px;"><span class="status-badge fair">1.6 - 2.5</span> Fair / Mild Stress</li>
+                        <li style="margin-bottom: 10px;"><span class="status-badge poor">2.6 - 3.5</span> Poor / High Stress</li>
+                        <li style="margin-bottom: 10px;"><span class="status-badge critical">3.6 - 4.0</span> Critical Attention</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="collapsible-btn" onclick="toggleAccordion(this)">
+                <span><i class="fas fa-user-shield"></i> Security Settings</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="collapsible-content">
+                <div style="padding: 20px 0;">
+                    <form method="POST" action="{{ url_for('settings') }}" style="max-width: 400px;">
+                        <input type="password" name="current_password" placeholder="Current Password" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <input type="password" name="new_password" placeholder="New Password" required style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <button type="submit" class="btn-save" style="width: 100%; padding: 12px; background: var(--sidebar-color); color: white; border: none; border-radius: 5px; cursor: pointer;">Update Credentials</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function toggleAccordion(btn) {
+            // Toggle active class for the button
+            btn.classList.toggle("active-btn");
+            
+            // Toggle the chevron icon
+            const icon = btn.querySelector(".fa-chevron-down") || btn.querySelector(".fa-chevron-up");
+            if (btn.classList.contains("active-btn")) {
+                icon.classList.replace("fa-chevron-down", "fa-chevron-up");
+            } else {
+                icon.classList.replace("fa-chevron-up", "fa-chevron-down");
+            }
+
+            // Show/Hide the content
+            var content = btn.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        }
+    </script>
+</body>
+</html>

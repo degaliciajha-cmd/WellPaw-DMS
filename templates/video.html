@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DMS | Video Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+    <div id="loading-overlay" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; color: white;">
+        <i class="fas fa-spinner fa-spin" style="font-size: 4rem; margin-bottom: 20px;"></i>
+        <h2>AI is analyzing dog behavior...</h2>
+        <p>This may take a few seconds.</p>
+    </div>
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div style="text-align: left; font-weight: bold; color: #beb0ac;">DMS Admin</div>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="{{ url_for('monitoring') }}" class="nav-item active"><i class="fas fa-desktop"></i> Monitoring</a>
+            <a href="{{ url_for('records') }}" class="nav-item"><i class="fas fa-dog"></i> Dog Records</a>
+            <a href="{{ url_for('settings') }}" class="nav-item"><i class="fas fa-cog"></i> Settings</a>
+        </div>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('logout') }}" class="nav-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-bar" style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Video Analysis</h1>
+            <div class="progress-container">
+                <div class="step-circle ">1</div>
+                <div class="step-circle active">2</div>
+                <div class="step-circle">3</div>
+            </div>
+        </header>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              {% if message != "No video file detected." %}
+              <div class="alert" style="padding: 18px; background-color: #fdf7f2; border-left: 5px solid #361a07; color: #361a07; margin-bottom: 25px; border-radius: 8px; display: flex; align-items: center; gap: 18px; box-shadow: 0 4px 10px rgba(54, 26, 7, 0.1);">
+                <div style="background: #361a07; color: white; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div style="text-align: left;">
+                    <strong style="display: block; font-size: 1.05rem; margin-bottom: 2px;">Subject Not Detected</strong>
+                    <span style="font-size: 0.9rem; opacity: 0.8;">{{ message }}</span>
+                </div>
+              </div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <section class="card wide-card">
+            <div class="assessment-header" style="text-align: center; padding: 20px;">
+                <i class="fas fa-video" style="font-size: 3.5rem; color: #361a07; margin-bottom: 15px;"></i>
+                <h3>Upload Dog Activity Video</h3>
+                <p>Our AI system (YOLOv5) will verify the subject and analyze movement patterns.</p>
+            </div>
+
+            <form id="analysis-form" action="{{ url_for('video_analysis') }}" method="POST" enctype="multipart/form-data" style="text-align: center;">
+                <div class="upload-box" style="border: 2px dashed #361a07; padding: 50px; border-radius: 15px; background: #fafafa; margin-bottom: 30px;">
+                    <input type="file" name="dog_video" id="dog_video" accept="video/*" required style="display: none;">
+                    <label for="dog_video" style="cursor: pointer;">
+                        
+                    <div class="form-actions" style="background: #361a07; color: white; display: inline-block; padding: 12px 25px; border-radius: 8px; font-weight: 600;">
+                            <i class="fas fa-file-upload"></i> Choose Video File
+                        </div>
+                        <p id="file-name" style="margin-top: 15px; color: #666; font-style: italic;">No file selected (MP4, MOV supported)</p>
+                    </label>
+                </div>
+                
+                <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 15px;">
+                    <a href="{{ url_for('monitoring') }}" class="btn btn-secondary" style="background: #999; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px;">Back</a>
+                    <button type="submit" class="btn btn-save" style="background: #361a07; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        Analyze & Proceed <i class="fas fa-microchip"></i>
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        // Update file name display
+        document.getElementById('dog_video').onchange = function () {
+            if(this.files[0]) {
+                document.getElementById('file-name').innerHTML = '<i class="fas fa-check-circle"></i> ' + this.files[0].name;
+                document.getElementById('file-name').style.color = "#2e7d32";
+            }
+        };
+
+        // Show loading overlay on submit
+        document.getElementById('analysis-form').onsubmit = function() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+        };
+    </script>
+</body>
+</html>

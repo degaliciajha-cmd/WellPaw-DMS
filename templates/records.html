@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DMS | Records</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+
+    
+</head>
+<body class="dashboard-body">
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div style="text-align: left; font-weight: bold; color: #beb0ac;">DMS Admin</div>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="{{ url_for('monitoring') }}" class="nav-item"><i class="fas fa-desktop"></i> Monitoring</a>
+            <a href="{{ url_for('records') }}" class="nav-item active"><i class="fas fa-dog"></i> View Records</a>
+            <a href="{{ url_for('settings') }}" class="nav-item"><i class="fas fa-cog"></i> Settings</a>
+        </div>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('logout') }}" class="nav-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-bar" style="display: flex; justify-content: space-between; align-items: center; height: 80px; padding: 0 40px; background: white; border-bottom: 1px solid #ddd;">
+            <h1>Dog Monitoring Logs</h1>
+            <div class="search-container">
+                <i class="fas fa-search" style="margin-right: -30px; position: relative; z-index: 1; color: #999;"></i>
+                <input type="text" id="recordSearch" onkeyup="filterTable()" placeholder="      Search dog or owner..." style="padding-left: 35px;">
+            </div>
+        </header>
+
+        <section class="card wide-card" style="margin: 30px 40px;">
+            <table class="assessment-table" id="recordsTable">
+                <thead>
+                    <tr>
+                    <ol>
+                        <th>ID</th>
+                        <th>OWNER</th>
+                        <th>DOG NAME</th>
+                        <th>BREED</th>
+                        <th>AGE</th>
+                        <th>SCORE</th>
+                        <th>STATUS</th>
+                        <th style="width: 120px; text-align: center;">ACTIONS</th> 
+                    </tr>
+                    </ol>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td>#{{ row.id }}</td>
+                        <td>{{ row.owner_name }}</td>
+                        <td><strong>{{ row.dog_name }}</strong></td>
+                        <td>{{ row.dog_breed }}</td>
+                        <td>{{ row.dog_age }}</td>
+                        <td>{{ row.average_score }}</td>
+                        <td><span class="status-badge {{ row.stress_level.lower() }}">{{ row.stress_level }}</span></td>
+                        <td style="text-align: center;">
+                            <button class="action-btn btn-edit" onclick="openEditModal('{{ row.id }}', '{{ row.owner_name }}', '{{ row.dog_name }}', '{{ row.dog_breed }}', '{{ row.dog_age }}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            
+                            <form action="{{ url_for('delete_record', id=row.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this record?');">
+                                <button type="submit" class="action-btn btn-delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 style="color: #361a07; margin-bottom: 20px;">Update Record</h3>
+            <form action="{{ url_for('update_record') }}" method="POST">
+                <input type="hidden" id="edit_id" name="id">
+                
+                <label>Owner Name</label>
+                <input type="text" id="edit_owner" name="owner_name" required style="width: 100%; margin-bottom: 15px; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                
+                <label>Dog Name</label>
+                <input type="text" id="edit_dog" name="dog_name" required style="width: 100%; margin-bottom: 15px; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                
+                <label>Breed</label>
+                <input type="text" id="edit_breed" name="dog_breed" required style="width: 100%; margin-bottom: 15px; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                
+                <label>Age</label>
+                <input type="text" id="edit_age" name="dog_age" required style="width: 100%; margin-bottom: 20px; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                
+                <button type="submit" class="btn-save" style="width: 100%; padding: 12px; background: #361a07; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                    <i class="fas fa-save"></i> Update Record
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openEditModal(id, owner, dog, breed, age) {
+            document.getElementById('editModal').style.display = "block";
+            document.getElementById('edit_id').value = id;
+            document.getElementById('edit_owner').value = owner;
+            document.getElementById('edit_dog').value = dog;
+            document.getElementById('edit_breed').value = breed;
+            document.getElementById('edit_age').value = age;
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            var modal = document.getElementById('editModal');
+            if (event.target == modal) { modal.style.display = "none"; }
+        }
+
+        // Live Search Logic
+        function filterTable() {
+            var input, filter, table, tr, td, i, j, txtValue;
+            input = document.getElementById("recordSearch");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("recordsTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 1; i < tr.length; i++) {
+                tr[i].style.display = "none";
+                td = tr[i].getElementsByTagName("td");
+                for (j = 0; j < td.length; j++) {
+                    if (td[j]) {
+                        txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DMS | Monitoring Information</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div style="text-align: left; font-weight: bold; color: #beb0ac;">DMS Admin</div>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="{{ url_for('monitoring') }}" class="nav-item active"><i class="fas fa-desktop"></i> Monitoring</a>
+            <a href="{{ url_for('records') }}" class="nav-item"><i class="fas fa-dog"></i> Dog Records</a>
+            <a href="{{ url_for('settings') }}" class="nav-item"><i class="fas fa-cog"></i> Settings</a>
+        </div>
+        <div class="sidebar-footer">
+            <a href="{{ url_for('logout') }}" class="nav-item logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-bar" style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Initial Registration</h1>
+            <div class="progress-container">
+                <div class="step-circle active">1</div>
+                <div class="step-circle">2</div>
+                <div class="step-circle">3</div>
+            </div>
+        </header>
+
+        <section class="card wide-card">
+            <div class="assessment-header">
+                <h3>Owner and Dog Information</h3>
+                <p>Please enter the basic details before proceeding to video analysis.</p>
+            </div>
+
+            <form action="{{ url_for('monitoring') }}" method="POST">
+                <table class="assessment-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 35%;">Category</th>
+                            <th style="width: 60%;">Input Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><i class="fas fa-user"></i> <label for="owner_name">Owner Name</label></td>
+                            <td><input type="text" name="owner_name" id="owner_name" placeholder="Full Name" required></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-calendar-alt"></i> <label for="owner_age">Owner Age</label></td>
+                            <td><input type="number" name="owner_age" id="owner_age" placeholder="Enter Age" required></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-paw"></i> <label for="dog_name">Dog Name</label></td>
+                            <td><input type="text" name="dog_name" id="dog_name" placeholder="Dog's Name" required></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-hourglass-half"></i> <label for="dog_age">Dog Age</label></td>
+                            <td><input type="text" name="dog_age" id="dog_age" placeholder="e.g. 3 years" required></td>
+                        </tr>
+                        <tr>
+                            <td><i class="fas fa-dna"></i> <label for="dog_breed">Dog Breed</label></td>
+                            <td><input type="text" name="dog_breed" id="dog_breed" placeholder="e.g. Husky" required></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="form-actions" style="margin-top: 25px; display: flex; gap: 15px; justify-content: flex-end;">
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="background: #999; color: white; padding: 12px 25px; text-decoration: none; border-radius: 8px;">Cancel</a>
+                    <button type="submit" class="btn btn-save" style="background: #361a07; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        Next Step <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMS - Login</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
+
+<body class="login-page">
+    <div class="login-container">
+
+        <img src="{{ url_for('static', filename='images/logo.png') }}"
+             alt="DMS Logo"
+             class="logo">
+
+        <h2>DMS Login</h2>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="error-message">
+                <i class="fas fa-circle-exclamation"></i>
+                {{ messages[0] }}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div style="margin-bottom: 15px;">
+                <input type="text" name="username" placeholder="Username" required autocomplete="username">
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <input type="password" name="password" placeholder="Password" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn btn-login">
+                <i class="fas fa-right-to-bracket"></i> Login
+            </button>
+
+            </button>
+        </form>
+
+    </div>
+</body>
+</html>

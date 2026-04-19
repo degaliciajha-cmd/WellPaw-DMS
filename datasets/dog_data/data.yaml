@@ -1,0 +1,6 @@
+path: C:/Users/jhane/Downloads/DogMonitoringSystem/datasets/dog_data
+train: images/train
+val: images/val
+
+names:
+  0: dog
