@@ -1,4 +1,4 @@
-WellPaw: Dog Monitoring System (DMS)
+#WellPaw: Dog Monitoring System (DMS)
 WellPaw is an AI-driven digital diagnostic assistant designed to bridge the gap between pet owners and veterinary professionals. By integrating clinical questionnaires with real-time video analysis, WellPaw provides objective data to assist staff during animal consultations.
 
 🚀 Core Features
